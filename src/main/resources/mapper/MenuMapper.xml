@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eltweiyao.restaurant.dao.MenuMapper">
+    <insert id="saveMenuRecipes">
+        insert into menu_related_recipe(pk_menu, pk_recipe, pk_company, is_shelf)
+        values
+        <foreach collection="recipes" item="recipe" separator=",">
+            (#{pkMenu}, #{recipe}, #{pkCompany}, "1")
+        </foreach>
+    </insert>
+    <insert id="saveMenuInfo">
+        insert into menu_programme(pk_menu, menu_name, pk_company)
+        value (#{pkMenu}, #{menuName}, #{pkCompany})
+    </insert>
+    <update id="updateMenuInfo">
+        update menu_programme
+        set menu_name = #{menuName}
+        where pk_menu = #{pkMenu} and pk_company = #{pkCompany}
+    </update>
+    <delete id="deleteMenuRecipes">
+        delete from menu_related_recipe
+        where pk_menu = #{pkMenu} and pk_company = #{pkCompany}
+    </delete>
+
+    <select id="listRecipeByCategory" resultType="com.eltweiyao.restaurant.pojo.Menu">
+        select pk_recipe as 'key', recipe_name as 'value'
+        from recipe_programme
+        where pk_category = #{pkCategory} and pk_company = #{pkCompany}
+    </select>
+    <select id="listMenu" resultType="com.eltweiyao.restaurant.pojo.Menu">
+        select pk_menu pkMenu, menu_name menuName
+        from menu_programme
+        where pk_company = #{pkCompany}
+        <if test="menuName != '' and menuName != null">
+            <![CDATA[ and instr(menu_name, #{menuName}) > 0]]>
+        </if>
+    </select>
+    <select id="checkMenuExist" resultType="java.lang.Integer">
+        select count(*)
+        from menu_programme
+        where pk_company = #{pkCompany} and menu_name = #{menuName}
+        <if test="pkMenu != null and pkMenu != ''">
+            and pk_menu != #{pkMenu}
+        </if>
+    </select>
+    <select id="listPkRecipe" resultType="java.lang.String">
+        select pk_recipe
+        from menu_related_recipe
+        where pk_menu = #{pkMenu} and pk_company = #{pkCompany}
+    </select>
+
+    <select id="queryRecipeCount" resultType="com.eltweiyao.restaurant.pojo.Recipe">
+        select recipe_name recipeName
+        from menu_related_recipe menu inner join recipe_programme recipe
+        on menu.pk_company = recipe.pk_company and menu.pk_recipe = recipe.pk_recipe
+        where menu.pk_menu = #{pkMenu} and menu.pk_company = #{pkCompany}
+    </select>
+
+</mapper>

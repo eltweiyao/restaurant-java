@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eltweiyao.restaurant.dao.MaterialMapper">
+
+    <insert id="saveMaterialUnit">
+        insert into material_unit(pk_unit, unit_name, pk_company) values(#{pkUnit}, #{unitName}, #{pkCompany})
+    </insert>
+
+    <insert id="saveMaterial">
+        insert into material_programme(pk_material, material_name, pk_unit, material_price, pk_company)
+        values (#{material.pkMaterial}, #{material.materialName}, #{material.pkUnit}, #{material.materialPrice}, #{pkCompany})
+    </insert>
+
+    <update id="updateMaterialUnit">
+        update material_unit
+        set unit_name = #{unitName}
+        where pk_unit = #{pkUnit} and pk_company = #{pkCompany}
+    </update>
+    <update id="updateMaterial">
+        update material_programme
+        set pk_unit = #{material.pkUnit}, material_name = #{material.materialName}, material_price = #{material.materialPrice}
+        where pk_material = #{material.pkMaterial} and pk_company = #{pkCompany}
+    </update>
+
+    <select id="checkMaterialUnitExist" resultType="java.lang.Integer">
+        select count(*)
+        from material_unit
+        where unit_name = #{unitName} and pk_company = #{pkCompany}
+        <if test="pkUnit != '' and pkUnit != null">
+            and pk_unit != #{pkUnit}
+        </if>
+    </select>
+    <select id="listMaterialUnit" resultType="com.eltweiyao.restaurant.pojo.Material">
+        select pk_unit pkUnit, unit_name unitName
+        from material_unit
+        where pk_company = #{pkCompany}
+            <if test="unitName != '' and unitName != null">
+                <![CDATA[ and instr(unit_name, #{unitName}) > 0]]>
+            </if>
+    </select>
+    <select id="listMaterial" resultType="com.eltweiyao.restaurant.pojo.Material">
+        select pk_material pkMaterial, material_name materialName, unit.pk_unit pkUnit, unit_name unitName, material_price materialPrice
+        from material_programme material, material_unit unit
+        where unit.pk_unit = material.pk_unit
+        and material.pk_company = unit.pk_company
+        and unit.pk_company = #{pkCompany}
+            <if test="materialName != '' and materialName != null">
+                and material.material_name = #{materialName}
+            </if>
+    </select>
+    <select id="checkMaterialExist" resultType="java.lang.Integer">
+        select count(*)
+        from material_programme
+        where material_name = #{materialName} and pk_company = #{pkCompany}
+        <if test="pkMaterial != '' and pkMaterial != null">
+            and pk_material != #{pkMaterial}
+        </if>
+    </select>
+
+</mapper>

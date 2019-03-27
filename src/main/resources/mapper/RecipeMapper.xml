@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eltweiyao.restaurant.dao.RecipeMapper">
+
+    <resultMap id="recipeBean" type="com.eltweiyao.restaurant.pojo.Recipe">
+        <id column="pk_recipe" property="pkRecipe"/>
+        <result column="recipe_name" property="recipeName"/>
+        <result column="recipe_price" property="recipePrice"/>
+        <result column="pk_category" property="pkCategory"/>
+        <result column="category_name" property="categoryName"/>
+        <collection property="materials" ofType="com.eltweiyao.restaurant.pojo.Material">
+            <id column="pk_material" property="pkMaterial"/>
+            <result column="material_name" property="materialName"/>
+            <result column="material_price" property="materialPrice"/>
+            <result column="material_count" property="materialCount"/>
+            <result column="pk_unit" property="pkUnit"/>
+            <result column="unit_name" property="unitName"/>
+        </collection>
+    </resultMap>
+
+    <insert id="saveRecipeMaterials">
+        insert into recipe_related_material(pk_recipe,pk_material,material_count, pk_company)
+        values
+        <if test="materials != null and materials.size() > 0">
+            <foreach collection="materials" item="material" separator=",">
+                (#{pkRecipe}, #{material.pkMaterial}, #{material.materialCount}, #{pkCompany})
+            </foreach>
+        </if>
+    </insert>
+    <insert id="saveRecipeInfo">
+        insert into recipe_programme(pk_recipe, pk_category, recipe_name, recipe_price, is_shelf, pk_company)
+        values (#{recipe.pkRecipe}, #{recipe.pkCategory}, #{recipe.recipeName}, #{recipe.recipePrice}, '1', #{pkCompany})
+    </insert>
+    <update id="updateRecipeInfo">
+        update recipe_programme
+        set recipe_name = #{recipeName}, recipe_price = #{recipePrice}, pk_category = #{pkCategory}
+        where pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
+    </update>
+    <update id="updateRecipeMaterial">
+        update recipe_related_material
+        set pk_material = #{pkMaterial}, material_count = #{materialCount}
+        where pk_material = #{oldPkMaterial} and pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
+    </update>
+    <update id="updateRecipeMaterialCount">
+        update recipe_related_material
+        set material_count = (material_count + #{materialCount})
+        where pk_material = #{pkMaterial} and pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
+    </update>
+    <delete id="deleteRecipeMaterial">
+        delete from recipe_related_material
+        where pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
+        <if test="pkMaterial != '' and pkMaterial != null">
+            and pk_material = #{pkMaterial}
+        </if>
+    </delete>
+    <select id="listRecipe" resultMap="recipeBean">
+        select rp.pk_recipe, rp.recipe_name, rp.recipe_price, rm.pk_material, mp.material_name, rm.material_count, mp.material_price, mp.pk_unit,
+        mu.unit_name, rc.pk_category, rc.category_name
+        from recipe_programme rp
+        left join recipe_related_material rm
+        on rp.pk_recipe = rm.pk_recipe and rp.pk_company = rm.pk_company
+        inner join material_programme mp
+        on rm.pk_material = mp.pk_material and rm.pk_company = mp.pk_company
+        inner join material_unit mu
+        on mp.pk_unit = mu.pk_unit and mp.pk_company = mu.pk_company
+        inner join recipe_category rc
+        on rp.pk_category = rc.pk_category and rp.pk_company = rc.pk_company
+        where rp.pk_company = #{pkCompany}
+        <if test="recipeName != '' and recipeName != null">
+            <![CDATA[ and instr(recipe_name, #{recipeName}) >0 ]]>
+        </if>
+        <if test="materialName != '' and materialName != null">
+            <![CDATA[ and instr(material_name, #{materialName}) >0 ]]>
+        </if>
+    </select>
+    <select id="checkRecipeExist" resultType="java.lang.Integer">
+        select count(*)
+        from recipe_programme
+        where recipe_name = #{recipeName} and pk_company = #{pkCompany}
+        <if test="pkRecipe != '' and pkRecipe != null">
+            and pk_recipe != #{pkRecipe}
+        </if>
+    </select>
+    <select id="checkRecipeMaterialExist" resultType="java.lang.Integer">
+        select count(*)
+        from recipe_related_material
+        where pk_recipe = #{pkRecipe} and pk_material = #{pkMaterial} and pk_company = #{pkCompany}
+    </select>
+
+</mapper>
