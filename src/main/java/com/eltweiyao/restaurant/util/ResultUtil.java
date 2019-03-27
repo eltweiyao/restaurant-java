@@ -1,10 +1,9 @@
 package com.eltweiyao.restaurant.util;
 
 import com.eltweiyao.restaurant.constant.ResponseCode;
-import com.eltweiyao.restaurant.constant.Result;
+import com.eltweiyao.restaurant.vo.Result;
 import com.eltweiyao.restaurant.constant.WebPage;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.pagehelper.Page;
 
 /**
  * @author weiyao

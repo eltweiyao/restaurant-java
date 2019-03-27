@@ -4,7 +4,7 @@
 
 
     <select id="login" resultType="java.util.Map">
-        select pk_company pkCompany, account_type accountType
+        select pk_company pkCompany, account_type accountType, account, company_name companyName
         from restaurant_account
         where account = #{account} and password = #{password}
     </select>
