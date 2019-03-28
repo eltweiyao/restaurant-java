@@ -1,5 +1,8 @@
 package com.eltweiyao.restaurant.constant;
 
+import com.eltweiyao.restaurant.util.CodeHelper;
+import sun.awt.geom.AreaOp;
+
 import java.util.Map;
 
 /**
@@ -89,5 +92,9 @@ public class WebPage {
                 ", orderby=" + orderby +
                 ", total=" + total +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        System.out.println(CodeHelper.createUUID());
     }
 }
