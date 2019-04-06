@@ -1,8 +1,8 @@
 package com.eltweiyao.restaurant.service.impl;
 
 import com.eltweiyao.restaurant.dao.RecipeMapper;
-import com.eltweiyao.restaurant.pojo.Material;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Material;
+import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.RecipeService;
 import com.eltweiyao.restaurant.util.CodeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +61,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany) {
-        recipeMapper.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, pkCompany);
+    public void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl) {
+        recipeMapper.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, pkCompany, imageUrl);
     }
 
     @Override
@@ -80,6 +80,13 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void deleteRecipeMaterial(String pkRecipe, String pkMaterial, String pkCompany) {
         recipeMapper.deleteRecipeMaterial(pkRecipe, pkMaterial, pkCompany);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRecipe(String pkRecipe, String pkCompany) throws Exception {
+        recipeMapper.deleteRecipe(pkRecipe, pkCompany);
+        recipeMapper.deleteRecipeMaterial(pkRecipe, null, pkCompany);
     }
 
 }

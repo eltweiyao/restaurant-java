@@ -1,7 +1,7 @@
 package com.eltweiyao.restaurant.dao;
 
-import com.eltweiyao.restaurant.pojo.Menu;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Menu;
+import com.eltweiyao.restaurant.dto.Recipe;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

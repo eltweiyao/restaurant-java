@@ -2,7 +2,7 @@ package com.eltweiyao.restaurant.controller;
 
 import com.eltweiyao.restaurant.vo.Result;
 import com.eltweiyao.restaurant.constant.WebPage;
-import com.eltweiyao.restaurant.pojo.Material;
+import com.eltweiyao.restaurant.dto.Material;
 import com.eltweiyao.restaurant.service.MaterialService;
 import com.eltweiyao.restaurant.util.ResultUtil;
 import com.github.pagehelper.PageHelper;

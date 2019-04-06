@@ -1,6 +1,6 @@
 package com.eltweiyao.restaurant.service;
 
-import com.eltweiyao.restaurant.pojo.Material;
+import com.eltweiyao.restaurant.dto.Material;
 
 import java.util.List;
 

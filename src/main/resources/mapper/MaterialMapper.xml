@@ -30,7 +30,7 @@
             and pk_unit != #{pkUnit}
         </if>
     </select>
-    <select id="listMaterialUnit" resultType="com.eltweiyao.restaurant.pojo.Material">
+    <select id="listMaterialUnit" resultType="com.eltweiyao.restaurant.dto.Material">
         select pk_unit pkUnit, unit_name unitName
         from material_unit
         where pk_company = #{pkCompany}
@@ -38,7 +38,7 @@
                 <![CDATA[ and instr(unit_name, #{unitName}) > 0]]>
             </if>
     </select>
-    <select id="listMaterial" resultType="com.eltweiyao.restaurant.pojo.Material">
+    <select id="listMaterial" resultType="com.eltweiyao.restaurant.dto.Material">
         select pk_material pkMaterial, material_name materialName, unit.pk_unit pkUnit, unit_name unitName, material_price materialPrice
         from material_programme material, material_unit unit
         where unit.pk_unit = material.pk_unit

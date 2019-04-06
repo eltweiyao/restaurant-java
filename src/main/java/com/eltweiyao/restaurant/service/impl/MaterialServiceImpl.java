@@ -1,7 +1,7 @@
 package com.eltweiyao.restaurant.service.impl;
 
 import com.eltweiyao.restaurant.dao.MaterialMapper;
-import com.eltweiyao.restaurant.pojo.Material;
+import com.eltweiyao.restaurant.dto.Material;
 import com.eltweiyao.restaurant.service.MaterialService;
 import com.eltweiyao.restaurant.util.CodeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author weiyao

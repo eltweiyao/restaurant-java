@@ -22,12 +22,12 @@
         where pk_menu = #{pkMenu} and pk_company = #{pkCompany}
     </delete>
 
-    <select id="listRecipeByCategory" resultType="com.eltweiyao.restaurant.pojo.Menu">
+    <select id="listRecipeByCategory" resultType="com.eltweiyao.restaurant.dto.Menu">
         select pk_recipe as 'key', recipe_name as 'value'
         from recipe_programme
         where pk_category = #{pkCategory} and pk_company = #{pkCompany}
     </select>
-    <select id="listMenu" resultType="com.eltweiyao.restaurant.pojo.Menu">
+    <select id="listMenu" resultType="com.eltweiyao.restaurant.dto.Menu">
         select pk_menu pkMenu, menu_name menuName
         from menu_programme
         where pk_company = #{pkCompany}
@@ -44,12 +44,16 @@
         </if>
     </select>
     <select id="listPkRecipe" resultType="java.lang.String">
-        select pk_recipe
-        from menu_related_recipe
-        where pk_menu = #{pkMenu} and pk_company = #{pkCompany}
+        SELECT
+        	menu.pk_recipe
+        FROM
+        	recipe_programme recipe
+        	INNER JOIN menu_related_recipe menu ON recipe.pk_company = menu.pk_company
+        	AND recipe.pk_recipe = menu.pk_recipe
+        WHERE pk_menu = #{pkMenu} and menu.pk_company = #{pkCompany}
     </select>
 
-    <select id="queryRecipeCount" resultType="com.eltweiyao.restaurant.pojo.Recipe">
+    <select id="queryRecipeCount" resultType="com.eltweiyao.restaurant.dto.Recipe">
         select recipe_name recipeName
         from menu_related_recipe menu inner join recipe_programme recipe
         on menu.pk_company = recipe.pk_company and menu.pk_recipe = recipe.pk_recipe

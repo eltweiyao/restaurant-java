@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eltweiyao.restaurant.dao.StoreMapper">
+    <insert id="saveStore">
+        insert into restaurant_store(pk_store, store_name, contact_name, store_position, store_detail_address, pk_company, pk_menu)
+        value (#{pkStore}, #{storeName}, #{contactName}, #{storePosition}, #{detailAddress}, #{pkCompany}, #{pkMenu})
+    </insert>
+    <update id="updateStore">
+        update restaurant_store
+        set store_name = #{storeName}, contact_name =#{contactName},
+        store_position = #{storePosition}, store_detail_address = #{detailAddress}, pk_menu = #{pkMenu}
+        where pk_store = #{pkStore} and pk_company = #{pkCompany}
+    </update>
+    <delete id="deleteStore">
+        delete from restaurant_store
+        where pk_store = #{pkStore} and pk_company = #{pkCompany}
+    </delete>
+
+    <select id="listStore" resultType="com.eltweiyao.restaurant.dto.Store">
+        SELECT
+        store.pk_store pkStore,
+        store.store_name storeName,
+        contact_name contactName,
+        account,
+        store_position storePosition,
+        store_detail_address detailAddress,
+        store.pk_company pkCompany,
+        store.pk_menu pkMenu,
+        PASSWORD,
+        menu_name menuName
+        FROM
+        restaurant_store store
+        INNER JOIN menu_programme menu ON store.pk_menu = menu.pk_menu
+        AND store.pk_company = menu.pk_company
+        INNER JOIN restaurant_account account ON store.pk_store = account.pk_store
+        AND store.pk_company = account.pk_company
+        where store.pk_company = #{pkCompany}
+        <if test="storeName != '' and storeName != null">
+            <![CDATA[ and instr(store_name, #{storeName}) > 0]]>
+        </if>
+        <if test="storePosition != '' and storePosition != null">
+            and store_position = #{storePosition}
+        </if>
+    </select>
+    <select id="checkStoreExist" resultType="java.lang.Integer">
+        select count(*)
+        from restaurant_store
+        where pk_company = #{pkCompany} and store_name = #{storeName}
+        <if test="pkStore != null and pkStore != ''">
+            and pk_store != #{pkStore}
+        </if>
+    </select>
+
+</mapper>

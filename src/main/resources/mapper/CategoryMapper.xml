@@ -20,7 +20,7 @@
             and pk_category != #{pkCategory}
         </if>
     </select>
-    <select id="listCategory" resultType="com.eltweiyao.restaurant.pojo.Recipe">
+    <select id="listCategory" resultType="com.eltweiyao.restaurant.dto.Recipe">
         select pk_category pkCategory, category_name categoryName
         from recipe_category
         where pk_company = #{pkCompany}

@@ -1,4 +1,4 @@
-package com.eltweiyao.restaurant.pojo;
+package com.eltweiyao.restaurant.dto;
 
 import lombok.Data;
 

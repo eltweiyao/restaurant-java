@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eltweiyao.restaurant.dao.RecipeMapper">
 
-    <resultMap id="recipeBean" type="com.eltweiyao.restaurant.pojo.Recipe">
+    <resultMap id="recipeBean" type="com.eltweiyao.restaurant.dto.Recipe">
         <id column="pk_recipe" property="pkRecipe"/>
         <result column="recipe_name" property="recipeName"/>
         <result column="recipe_price" property="recipePrice"/>
         <result column="pk_category" property="pkCategory"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="materials" ofType="com.eltweiyao.restaurant.pojo.Material">
+        <result column="image_url" property="imageUrl"/>
+        <collection property="materials" ofType="com.eltweiyao.restaurant.dto.Material">
             <id column="pk_material" property="pkMaterial"/>
             <result column="material_name" property="materialName"/>
             <result column="material_price" property="materialPrice"/>
@@ -28,12 +29,12 @@
         </if>
     </insert>
     <insert id="saveRecipeInfo">
-        insert into recipe_programme(pk_recipe, pk_category, recipe_name, recipe_price, is_shelf, pk_company)
-        values (#{recipe.pkRecipe}, #{recipe.pkCategory}, #{recipe.recipeName}, #{recipe.recipePrice}, '1', #{pkCompany})
+        insert into recipe_programme(pk_recipe, pk_category, recipe_name, recipe_price, is_shelf, image_url, pk_company)
+        values (#{recipe.pkRecipe}, #{recipe.pkCategory}, #{recipe.recipeName}, #{recipe.recipePrice}, '1', #{recipe.imageUrl}, #{pkCompany})
     </insert>
     <update id="updateRecipeInfo">
         update recipe_programme
-        set recipe_name = #{recipeName}, recipe_price = #{recipePrice}, pk_category = #{pkCategory}
+        set recipe_name = #{recipeName}, recipe_price = #{recipePrice}, pk_category = #{pkCategory}, image_url = #{imageUrl}
         where pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
     </update>
     <update id="updateRecipeMaterial">
@@ -53,24 +54,40 @@
             and pk_material = #{pkMaterial}
         </if>
     </delete>
+    <delete id="deleteRecipe">
+        delete from recipe_programme
+        where pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
+    </delete>
     <select id="listRecipe" resultMap="recipeBean">
-        select rp.pk_recipe, rp.recipe_name, rp.recipe_price, rm.pk_material, mp.material_name, rm.material_count, mp.material_price, mp.pk_unit,
-        mu.unit_name, rc.pk_category, rc.category_name
-        from recipe_programme rp
-        left join recipe_related_material rm
-        on rp.pk_recipe = rm.pk_recipe and rp.pk_company = rm.pk_company
-        inner join material_programme mp
-        on rm.pk_material = mp.pk_material and rm.pk_company = mp.pk_company
-        inner join material_unit mu
-        on mp.pk_unit = mu.pk_unit and mp.pk_company = mu.pk_company
-        inner join recipe_category rc
-        on rp.pk_category = rc.pk_category and rp.pk_company = rc.pk_company
-        where rp.pk_company = #{pkCompany}
+        SELECT
+        rp.pk_recipe,
+        rp.recipe_name,
+        rp.recipe_price,
+        rm.pk_material,
+        mp.material_name,
+        rm.material_count,
+        mp.material_price,
+        mp.pk_unit,
+        mu.unit_name,
+        rc.pk_category,
+        rc.category_name,
+        rp.image_url
+        FROM
+        recipe_programme rp
+        INNER JOIN recipe_category rc ON rp.pk_category = rc.pk_category
+        AND rp.pk_company = rc.pk_company
+        LEFT JOIN recipe_related_material rm ON rp.pk_recipe = rm.pk_recipe
+        AND rp.pk_company = rm.pk_company
+        LEFT JOIN material_programme mp ON rm.pk_material = mp.pk_material
+        AND rm.pk_company = mp.pk_company
+        LEFT JOIN material_unit mu ON mp.pk_unit = mu.pk_unit
+        AND mp.pk_company = mu.pk_company
+        WHERE rp.pk_company = #{pkCompany}
         <if test="recipeName != '' and recipeName != null">
-            <![CDATA[ and instr(recipe_name, #{recipeName}) >0 ]]>
+            <![CDATA[ AND instr(recipe_name, #{recipeName}) >0 ]]>
         </if>
         <if test="materialName != '' and materialName != null">
-            <![CDATA[ and instr(material_name, #{materialName}) >0 ]]>
+            <![CDATA[ AND instr(material_name, #{materialName}) >0 ]]>
         </if>
     </select>
     <select id="checkRecipeExist" resultType="java.lang.Integer">

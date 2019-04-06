@@ -1,7 +1,7 @@
 package com.eltweiyao.restaurant.service;
 
-import com.eltweiyao.restaurant.pojo.Menu;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Menu;
+import com.eltweiyao.restaurant.dto.Recipe;
 
 import java.util.List;
 

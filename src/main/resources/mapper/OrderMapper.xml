@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eltweiyao.restaurant.dao.OrderMapper">
+    <insert id="createOrder">
+		insert into restaurant_order (pk_recipe, recipe_price, recipe_count, pk_store, pk_company, create_time)
+		values
+		<foreach collection="orders" separator="," item="order">
+			(#{order.pkRecipe}, #{order.recipePrice}, #{order.recipeCount}, #{pkStore}, #{pkCompany}, #{createTime})
+		</foreach>
+	</insert>
+
+
+    <select id="listCategory" resultType="com.eltweiyao.restaurant.dto.Recipe">
+        SELECT
+			recipe.pk_category pkCategory,
+			category.category_name categoryName,
+			recipe.pk_recipe pkRecipe,
+			recipe.recipe_name recipeName,
+			recipe.recipe_price recipePrice,
+			recipe.image_url imageUrl
+		FROM
+			restaurant_store store
+			INNER JOIN menu_related_recipe menu ON store.pk_menu = menu.pk_menu
+			AND store.pk_company = menu.pk_company
+			LEFT JOIN recipe_programme recipe ON menu.pk_recipe = recipe.pk_recipe
+			AND menu.pk_company = recipe.pk_company
+			INNER JOIN recipe_category category ON recipe.pk_category = category.pk_category
+			AND recipe.pk_company = category.pk_company
+		WHERE
+			store.pk_store = #{pkStore} AND store.pk_company = #{pkCompany}
+
+    </select>
+	<select id="listOrder" resultType="com.eltweiyao.restaurant.dto.Order">
+		SELECT
+			orders.pk_recipe pkRecipe,
+			recipe.recipe_name recipeName,
+			orders.recipe_price recipePrice,
+			recipe_count recipeCount
+		FROM
+			restaurant_order orders
+			INNER JOIN recipe_programme recipe ON orders.pk_recipe = recipe.pk_recipe
+			AND orders.pk_company = recipe.pk_company
+		WHERE
+			orders.pk_company = #{pkCompany} AND orders.pk_store = #{pkStore}
+	</select>
+</mapper>

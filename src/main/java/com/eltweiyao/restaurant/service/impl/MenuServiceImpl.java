@@ -1,8 +1,8 @@
 package com.eltweiyao.restaurant.service.impl;
 
 import com.eltweiyao.restaurant.dao.MenuMapper;
-import com.eltweiyao.restaurant.pojo.Menu;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Menu;
+import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.CategoryService;
 import com.eltweiyao.restaurant.service.MenuService;
 import com.eltweiyao.restaurant.util.CodeHelper;

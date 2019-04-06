@@ -1,4 +1,4 @@
-package com.eltweiyao.restaurant.pojo;
+package com.eltweiyao.restaurant.dto;
 
 import lombok.Data;
 
@@ -17,6 +17,7 @@ public class Recipe {
     private double recipePrice;
     private String pkCategory;
     private String categoryName;
+    private String imageUrl;
     private List<Material> materials;
 
 }

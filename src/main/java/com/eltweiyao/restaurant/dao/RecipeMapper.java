@@ -1,7 +1,7 @@
 package com.eltweiyao.restaurant.dao;
 
-import com.eltweiyao.restaurant.pojo.Material;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Material;
+import com.eltweiyao.restaurant.dto.Recipe;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public interface RecipeMapper {
      * @param recipeName
      */
     void updateRecipeInfo(@Param("pkRecipe") String pkRecipe, @Param("pkCategory") String pkCategory, @Param("recipeName") String recipeName,
-                          @Param("recipePrice") double recipePrice, @Param("pkCompany") String pkCompany);
+                          @Param("recipePrice") double recipePrice, @Param("pkCompany") String pkCompany, @Param("imageUrl") String imageUrl);
 
     /**
      * 修改物料
@@ -88,4 +88,6 @@ public interface RecipeMapper {
      * @param pkMaterial
      */
     void deleteRecipeMaterial(@Param("pkRecipe") String pkRecipe, @Param("pkMaterial") String pkMaterial, @Param("pkCompany") String pkCompany);
+
+    void deleteRecipe(@Param("pkRecipe") String pkRecipe, @Param("pkCompany") String pkCompany);
 }

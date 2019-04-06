@@ -2,7 +2,7 @@ package com.eltweiyao.restaurant.controller;
 
 import com.eltweiyao.restaurant.vo.Result;
 import com.eltweiyao.restaurant.constant.WebPage;
-import com.eltweiyao.restaurant.pojo.Menu;
+import com.eltweiyao.restaurant.dto.Menu;
 import com.eltweiyao.restaurant.service.MenuService;
 import com.eltweiyao.restaurant.util.ResultUtil;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class MenuController {
     private MenuService menuService;
 
     @PostMapping("/listMenuItem")
-    public Result listMenuItem(HttpServletRequest request){
+    public Result listMenuItem(HttpServletRequest request) {
         String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
         if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
             return ResultUtil.error("未获取到当前登录人权限信息");
@@ -39,7 +39,7 @@ public class MenuController {
     public Result listMenu(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                            @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
                            @RequestParam(required = false) String menuName,
-                           HttpServletRequest request){
+                           HttpServletRequest request) {
         String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
         if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
             return ResultUtil.error("未获取到当前登录人权限信息");
@@ -50,7 +50,7 @@ public class MenuController {
     }
 
     @PostMapping("/saveMenu")
-    public Result saveRecipe(@RequestBody Menu menu, HttpServletRequest request) {
+    public Result saveMenu(@RequestBody Menu menu, HttpServletRequest request) {
         String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
         if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
             return ResultUtil.error("未获取到当前登录人权限信息");
@@ -59,7 +59,7 @@ public class MenuController {
             if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), pkCompany)) {
                 return ResultUtil.error("菜谱已存在");
             }
-            if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0){
+            if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0) {
                 return ResultUtil.error("请选择菜品");
             }
             menuService.saveMenu(menu.getMenuName(), menu.getPkRecipes(), pkCompany);
@@ -80,7 +80,7 @@ public class MenuController {
             if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), pkCompany)) {
                 return ResultUtil.error("菜谱已存在");
             }
-            if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0){
+            if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0) {
                 return ResultUtil.error("请选择菜品");
             }
             menuService.updateMenu(menu.getPkMenu(), menu.getMenuName(), menu.getPkRecipes(), pkCompany);

@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eltweiyao.restaurant.dao.AuthMapper">
+    <insert id="saveStoreAccount">
+        insert into restaurant_account(account, password, pk_company, pk_store, account_type, company_name)
+        select company_name from #{account}, #{password}, #{pkCompany}, #{pkStore}, "2", restaurant_account where pk_company = #{pkCompany}
+    </insert>
+    <update id="updateStoreAccount">
+        update restaurant_account
+        set account = #{account}, password = #{password}
+        where pk_company = #{pkCompany} and pk_store = #{pkStore}
+    </update>
 
 
     <select id="login" resultType="java.util.Map">
-        select pk_company pkCompany, account_type accountType, account, company_name companyName
-        from restaurant_account
-        where account = #{account} and password = #{password}
+        SELECT
+	      account.pk_company pkCompany,
+	      account_type accountType,
+	      account,
+	      company_name companyName,
+	      account.pk_store pkStore,
+	      store_name storeName
+      FROM
+	      restaurant_account account
+	  LEFT JOIN restaurant_store store ON account.pk_store = store.pk_store
+      WHERE account = #{account} AND password = #{password}
     </select>
     <select id="queryMenu" resultType="java.lang.String">
         select menu_json

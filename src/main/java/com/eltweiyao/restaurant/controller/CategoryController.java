@@ -2,7 +2,7 @@ package com.eltweiyao.restaurant.controller;
 
 import com.eltweiyao.restaurant.vo.Result;
 import com.eltweiyao.restaurant.constant.WebPage;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.CategoryService;
 import com.eltweiyao.restaurant.util.ResultUtil;
 import com.github.pagehelper.PageHelper;

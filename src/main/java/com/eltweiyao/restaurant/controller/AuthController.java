@@ -27,9 +27,11 @@ public class AuthController {
     public Result login(@RequestParam("account") String account,
                         @RequestParam("password") String password,
                         HttpSession session){
+        //登录管理员账户
         Map<String, String> map = authService.login(account, password);
         if (map != null && map.get("pkCompany") != null){
             session.setAttribute("pkCompany", map.get("pkCompany"));
+            session.setAttribute("pkStore", map.get("pkStore"));
             return ResultUtil.success(map);
         }
         return ResultUtil.error("账户名密码错误");

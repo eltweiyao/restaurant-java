@@ -1,7 +1,7 @@
 package com.eltweiyao.restaurant.service;
 
-import com.eltweiyao.restaurant.pojo.Material;
-import com.eltweiyao.restaurant.pojo.Recipe;
+import com.eltweiyao.restaurant.dto.Material;
+import com.eltweiyao.restaurant.dto.Recipe;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public interface RecipeService {
      * @param pkRecipe
      * @param recipeName
      */
-    void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany);
+    void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl);
 
     /**
      * 修改物料信息
@@ -61,4 +61,9 @@ public interface RecipeService {
      * @param pkMaterial
      */
     void deleteRecipeMaterial(String pkRecipe, String pkMaterial, String pkCompany);
+
+    void deleteRecipe(String pkRecipe, String pkCompany) throws Exception;
+
+
+
 }
