@@ -2,12 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eltweiyao.restaurant.dao.OrderMapper">
     <insert id="createOrder">
-		insert into restaurant_order (pk_recipe, recipe_price, recipe_count, pk_store, pk_company, create_time)
-		values
-		<foreach collection="orders" separator="," item="order">
-			(#{order.pkRecipe}, #{order.recipePrice}, #{order.recipeCount}, #{pkStore}, #{pkCompany}, #{createTime})
-		</foreach>
-	</insert>
+        insert into restaurant_order (pk_recipe, recipe_price, original_price, recipe_count, pk_store, pk_company,
+        create_time)
+        values
+        <foreach collection="orders" separator="," item="order">
+            (#{order.pkRecipe}, #{order.recipePrice}, #{order.originalPrice}, #{order.recipeCount}, #{pkStore},
+            #{pkCompany}, #{createTime})
+        </foreach>
+    </insert>
 
 
     <select id="listCategory" resultType="com.eltweiyao.restaurant.dto.Recipe">
@@ -30,7 +32,7 @@
 			store.pk_store = #{pkStore} AND store.pk_company = #{pkCompany}
 
     </select>
-	<select id="listOrder" resultType="com.eltweiyao.restaurant.dto.Order">
+    <select id="listOrder" resultType="com.eltweiyao.restaurant.dto.Order">
 		SELECT
 			orders.pk_recipe pkRecipe,
 			recipe.recipe_name recipeName,
@@ -42,5 +44,49 @@
 			AND orders.pk_company = recipe.pk_company
 		WHERE
 			orders.pk_company = #{pkCompany} AND orders.pk_store = #{pkStore}
+	</select>
+    <select id="getTurnoverReport" resultType="java.util.Map">
+		SELECT
+			sum( recipe_price * recipe_count ) "totalPrice",
+			sum( ( recipe_price - original_price ) * recipe_count ) "totalBonus"
+		FROM
+			restaurant_order
+		WHERE pk_company = #{pkCompany} and create_time between #{startDate} and #{endDate}
+	</select>
+    <select id="getDishFanReport" resultType="java.util.Map">
+		SELECT
+			recipe_name name,
+			IFNULL(SUM( recipe_count ), 0) number
+		FROM
+			recipe_programme recipe
+			RIGHT JOIN restaurant_order `order` ON `order`.pk_recipe = recipe.pk_recipe
+			AND `order`.pk_company = recipe.pk_company
+		WHERE recipe.pk_company = #{pkCompany} and `order`.create_time between #{startDate} and #{endDate}
+		GROUP BY
+			recipe.pk_recipe
+	</select>
+    <select id="getDishCount" resultType="java.lang.Integer">
+		SELECT IFNULL(SUM(recipe_count), 0)
+		FROM restaurant_order
+		WHERE pk_company = #{pkCompany} and create_time between #{startDate} and #{endDate}
+
+	</select>
+    <select id="getStoreFanReport" resultType="java.util.Map">
+		SELECT
+			store_name name,
+			IFNULL(SUM( ( recipe_price - original_price ) * recipe_count ), 0) number
+		FROM
+			restaurant_store store
+			LEFT JOIN restaurant_order `order` ON `order`.pk_store = store.pk_store
+			AND `order`.pk_company = store.pk_company
+		WHERE store.pk_company = #{pkCompany} and `order`.create_time between #{startDate} and #{endDate}
+		GROUP BY
+			`order`.pk_store
+	</select>
+    <select id="getStoreAmount" resultType="java.lang.Double">
+		SELECT IFNULL(SUM((recipe_price - original_price ) * recipe_count),0)
+		FROM restaurant_order
+		WHERE pk_company = #{pkCompany} and create_time between #{startDate} and #{endDate}
+
 	</select>
 </mapper>

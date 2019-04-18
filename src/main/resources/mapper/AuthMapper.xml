@@ -3,7 +3,7 @@
 <mapper namespace="com.eltweiyao.restaurant.dao.AuthMapper">
     <insert id="saveStoreAccount">
         insert into restaurant_account(account, password, pk_company, pk_store, account_type, company_name)
-        select company_name from #{account}, #{password}, #{pkCompany}, #{pkStore}, "2", restaurant_account where pk_company = #{pkCompany}
+        select #{account}, #{password}, #{pkCompany}, #{pkStore}, "2", company_name from restaurant_account where pk_company = #{pkCompany} limit 1
     </insert>
     <update id="updateStoreAccount">
         update restaurant_account

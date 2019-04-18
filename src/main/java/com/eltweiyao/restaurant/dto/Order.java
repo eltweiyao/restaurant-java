@@ -16,6 +16,7 @@ public class Order {
     private String pkCompany;
     private String pkRecipe;
     private double recipePrice;
+    private double originalPrice;
     private String recipeCount;
     private Time createTime;
 

@@ -57,10 +57,66 @@ public class OrderController {
         }
         try {
             orderService.createOrder(orderList, pkStore, pkCompany);
-            orderService.listOrder(pkStore, pkCompany);
             return ResultUtil.success();
         } catch (Exception e) {
             logger.error("查询菜品出错, errMsg = {}, stack info =", e.getMessage(), e);
+            return ResultUtil.error();
+        }
+    }
+
+    @PostMapping("/getTurnoverReport")
+    public Result getTurnoverReport(@RequestParam String dateLevel, HttpServletRequest request) {
+        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
+        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
+            return ResultUtil.error("未获取到当前登录人权限信息");
+        }
+        try {
+            return ResultUtil.success(orderService.getTurnoverReport(dateLevel, pkCompany));
+        } catch (Exception e) {
+            logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
+            return ResultUtil.error();
+        }
+    }
+
+    @PostMapping("/getDiagramReport")
+    public Result getDiagramReport(@RequestParam String dateLevel, HttpServletRequest request) {
+        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
+        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
+            return ResultUtil.error("未获取到当前登录人权限信息");
+        }
+        try {
+            return ResultUtil.success(orderService.getDiagramReport(dateLevel, pkCompany));
+        } catch (Exception e) {
+            logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
+            return ResultUtil.error();
+        }
+    }
+
+    @PostMapping("/getDishFanReport")
+    public Result getDishFanReport(@RequestParam String dateLevel, HttpServletRequest request) {
+        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
+        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
+            return ResultUtil.error("未获取到当前登录人权限信息");
+        }
+        try {
+            return ResultUtil.success(orderService.getDishFanReport(dateLevel, pkCompany));
+        } catch (Exception e) {
+            logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
+            return ResultUtil.error();
+        }
+    }
+
+    @PostMapping("/getStoreFanReport")
+    public Result getStoreFanReport(@RequestParam String dateLevel, HttpServletRequest request) {
+        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
+        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
+            return ResultUtil.error("未获取到当前登录人权限信息");
+        }
+        try {
+            orderService.getStoreFanReport(dateLevel, pkCompany);
+            return ResultUtil.success(orderService.getStoreFanReport(dateLevel, pkCompany));
+        } catch (Exception e) {
+            logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
         }
     }

@@ -5,6 +5,7 @@ import com.eltweiyao.restaurant.dto.Order;
 import com.eltweiyao.restaurant.dto.Recipe;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author weiyao
@@ -17,4 +18,13 @@ public interface OrderService {
     void createOrder(List<Order> orderList,String pkStore, String pkCompany);
 
     List<Order> listOrder(String pkStore, String pkCompany);
+
+    Map<String, String> getTurnoverReport(String level, String pkCompany);
+
+    List<Map<String, String>> getDiagramReport(String level, String pkCompany);
+
+    List<Map<String, String>> getDishFanReport(String level, String pkCompany);
+
+    List<Map<String, String>> getStoreFanReport(String level, String pkCompany);
+
 }

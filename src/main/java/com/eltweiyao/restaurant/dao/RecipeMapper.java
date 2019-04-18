@@ -90,4 +90,6 @@ public interface RecipeMapper {
     void deleteRecipeMaterial(@Param("pkRecipe") String pkRecipe, @Param("pkMaterial") String pkMaterial, @Param("pkCompany") String pkCompany);
 
     void deleteRecipe(@Param("pkRecipe") String pkRecipe, @Param("pkCompany") String pkCompany);
+
+    List<Material> listRecipeMaterial(@Param("pkRecipe") String pkRecipe, @Param("pkCompany") String company);
 }

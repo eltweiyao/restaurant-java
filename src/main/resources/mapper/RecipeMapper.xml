@@ -103,5 +103,17 @@
         from recipe_related_material
         where pk_recipe = #{pkRecipe} and pk_material = #{pkMaterial} and pk_company = #{pkCompany}
     </select>
+    <select id="listRecipeMaterial" resultType="com.eltweiyao.restaurant.dto.Material">
+        SELECT
+            recipe.pk_recipe pkRecipe,
+            material.pk_material pkMaterial,
+        	material.material_price materialPrice,
+        	recipe.material_count materialCount
+        FROM
+        	recipe_related_material recipe
+        	LEFT JOIN material_programme material ON recipe.pk_material = material.pk_material
+        	AND recipe.pk_company = material.pk_company
+        	WHERE recipe.pk_recipe = #{pkRecipe} AND recipe.pk_company = #{pkCompany}
+    </select>
 
 </mapper>

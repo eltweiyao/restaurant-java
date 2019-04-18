@@ -38,6 +38,8 @@ public class RecipeController {
     private String uploadPath;
     @Value("${server.port}")
     private String port;
+    @Value("${host.address}")
+    private String ip;
 
 
 
@@ -195,13 +197,16 @@ public class RecipeController {
                     String path = uploadPath + System.getProperty("file.separator") + trueFileName;
                     // 转存文件到指定的路径
                     file.transferTo(new File(path));
-                    InetAddress localHost = null;
-                    try {
-                        localHost = Inet4Address.getLocalHost();
-                    } catch (UnknownHostException e) {
-                        logger.error(e.getMessage(),e);
+                    if (ip == null || ip == ""){
+                        InetAddress localHost = null;
+                        try {
+                            localHost = Inet4Address.getLocalHost();
+                        } catch (UnknownHostException e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                        ip = localHost.getHostAddress();  // 返回格式为：xxx.xxx.xxx
+
                     }
-                    String ip = localHost.getHostAddress();  // 返回格式为：xxx.xxx.xxx
 
                     return ResultUtil.success("http://"+ip+":"+port+"/image/"+trueFileName);
                 }
