@@ -41,7 +41,7 @@ public interface RecipeMapper {
      * @param materialName
      * @return
      */
-    List<Recipe> listRecipe(@Param("recipeName") String recipeName, @Param("materialName") String materialName, @Param("pkCompany") String pkCompany);
+    List<Recipe> listRecipe(@Param("recipeName") String recipeName, @Param("materialName") String materialName, @Param("pkStore") String pkStore, @Param("pkCompany") String pkCompany);
 
     /**
      * 查看配方是否存在

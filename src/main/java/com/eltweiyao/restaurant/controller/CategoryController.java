@@ -1,7 +1,8 @@
 package com.eltweiyao.restaurant.controller;
 
+import com.eltweiyao.restaurant.context.RestaurantRequestContext;
 import com.eltweiyao.restaurant.vo.Result;
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.CategoryService;
 import com.eltweiyao.restaurant.util.ResultUtil;
@@ -32,18 +33,13 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/saveCategory")
-    public Result saveCategory(@RequestParam String categoryName,
-                                   HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result saveCategory(@RequestParam String categoryName) {
 
-        if (categoryService.checkCategoryExist(null, categoryName, pkCompany)) {
+        if (categoryService.checkCategoryExist(null, categoryName, RestaurantRequestContext.getPkCompany())) {
             return ResultUtil.error("类别已存在");
         }
         try {
-            categoryService.saveCategory(categoryName, pkCompany);
+            categoryService.saveCategory(categoryName, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("保存类别出错, errMsg = {} , stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -52,17 +48,13 @@ public class CategoryController {
     }
 
     @PostMapping("/updateCategory")
-    public Result updateCategory(@RequestParam String pkCategory, @RequestParam String categoryName,
-                                     HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        if (categoryService.checkCategoryExist(pkCategory, categoryName, pkCompany)) {
+    public Result updateCategory(@RequestParam String pkCategory, @RequestParam String categoryName) {
+
+        if (categoryService.checkCategoryExist(pkCategory, categoryName, RestaurantRequestContext.getPkCompany())) {
             return ResultUtil.error("类别已存在");
         }
         try {
-            categoryService.updateCategory(pkCategory, categoryName, pkCompany);
+            categoryService.updateCategory(pkCategory, categoryName, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("修改类别出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error("修改失败");
@@ -72,14 +64,10 @@ public class CategoryController {
     @PostMapping("/listCategory")
     public Result listCategory(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                                    @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
-                                   @RequestParam(required = false) String categoryName,
-                                   HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+                                   @RequestParam(required = false) String categoryName) {
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Recipe> categories = categoryService.listCategory(categoryName, pkCompany);
+        List<Recipe> categories = categoryService.listCategory(categoryName, RestaurantRequestContext.getPkCompany());
         PageInfo pageInfo = new PageInfo(categories);
         WebPage webPage = new WebPage(pageNum, pageSize, (int) pageInfo.getTotal());
         return ResultUtil.successPage(categories, webPage);
@@ -91,13 +79,9 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/listCategoryAll")
-    public Result listMaterialUnit(
-            HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        return ResultUtil.success(categoryService.listCategory(null, pkCompany));
+    public Result listMaterialUnit() {
+
+        return ResultUtil.success(categoryService.listCategory(null, RestaurantRequestContext.getPkCompany()));
     }
 
 }

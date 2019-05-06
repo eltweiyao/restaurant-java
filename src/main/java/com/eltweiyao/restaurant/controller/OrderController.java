@@ -1,5 +1,6 @@
 package com.eltweiyao.restaurant.controller;
 
+import com.eltweiyao.restaurant.context.RestaurantRequestContext;
 import com.eltweiyao.restaurant.dto.Order;
 import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.OrderService;
@@ -28,16 +29,9 @@ public class OrderController {
 
     @PostMapping("/listCategory")
     public Result listCategory(HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        String pkStore = String.valueOf(request.getSession().getAttribute("pkStore"));
-        if (pkStore == null || pkStore.equals("") || pkStore.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+
         try {
-            return ResultUtil.success(orderService.listCategory(pkStore, pkCompany));
+            return ResultUtil.success(orderService.listCategory(RestaurantRequestContext.getPkStore(), RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("查询菜品出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -45,18 +39,10 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public Result createOrder(@RequestBody List<Order> orderList,
-                              HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        String pkStore = String.valueOf(request.getSession().getAttribute("pkStore"));
-        if (pkStore == null || pkStore.equals("") || pkStore.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result createOrder(@RequestBody List<Order> orderList) {
+
         try {
-            orderService.createOrder(orderList, pkStore, pkCompany);
+            orderService.createOrder(orderList, RestaurantRequestContext.getPkStore(), RestaurantRequestContext.getPkCompany());
             return ResultUtil.success();
         } catch (Exception e) {
             logger.error("查询菜品出错, errMsg = {}, stack info =", e.getMessage(), e);
@@ -65,13 +51,10 @@ public class OrderController {
     }
 
     @PostMapping("/getTurnoverReport")
-    public Result getTurnoverReport(@RequestParam String dateLevel, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result getTurnoverReport(@RequestParam String dateLevel) {
+
         try {
-            return ResultUtil.success(orderService.getTurnoverReport(dateLevel, pkCompany));
+            return ResultUtil.success(orderService.getTurnoverReport(dateLevel, RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -79,13 +62,10 @@ public class OrderController {
     }
 
     @PostMapping("/getDiagramReport")
-    public Result getDiagramReport(@RequestParam String dateLevel, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result getDiagramReport(@RequestParam String dateLevel) {
+
         try {
-            return ResultUtil.success(orderService.getDiagramReport(dateLevel, pkCompany));
+            return ResultUtil.success(orderService.getDiagramReport(dateLevel, RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -93,13 +73,10 @@ public class OrderController {
     }
 
     @PostMapping("/getDishFanReport")
-    public Result getDishFanReport(@RequestParam String dateLevel, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result getDishFanReport(@RequestParam String dateLevel) {
+
         try {
-            return ResultUtil.success(orderService.getDishFanReport(dateLevel, pkCompany));
+            return ResultUtil.success(orderService.getDishFanReport(dateLevel, RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -107,14 +84,11 @@ public class OrderController {
     }
 
     @PostMapping("/getStoreFanReport")
-    public Result getStoreFanReport(@RequestParam String dateLevel, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result getStoreFanReport(@RequestParam String dateLevel) {
+
         try {
-            orderService.getStoreFanReport(dateLevel, pkCompany);
-            return ResultUtil.success(orderService.getStoreFanReport(dateLevel, pkCompany));
+            orderService.getStoreFanReport(dateLevel, RestaurantRequestContext.getPkCompany());
+            return ResultUtil.success(orderService.getStoreFanReport(dateLevel, RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("查询报表数据出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();

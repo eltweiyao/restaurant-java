@@ -21,9 +21,17 @@ public interface RecipeService {
      * 查询所有原料
      * @param recipeName
      * @param materialName
+     * @param pkCompany
      * @return
      */
     List<Recipe> listRecipe(String recipeName, String materialName, String pkCompany);
+    /**
+     * 查询所有原料
+     * @param pkCompany
+     * @param pkStore
+     * @return
+     */
+    List<Recipe> listRecipe(String recipeName, String materialName, String pkStore, String pkCompany);
 
     /**
      * 查看配方是否存在

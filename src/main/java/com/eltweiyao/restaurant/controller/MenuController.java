@@ -1,7 +1,8 @@
 package com.eltweiyao.restaurant.controller;
 
+import com.eltweiyao.restaurant.context.RestaurantRequestContext;
 import com.eltweiyao.restaurant.vo.Result;
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.eltweiyao.restaurant.dto.Menu;
 import com.eltweiyao.restaurant.service.MenuService;
 import com.eltweiyao.restaurant.util.ResultUtil;
@@ -27,42 +28,32 @@ public class MenuController {
     private MenuService menuService;
 
     @PostMapping("/listMenuItem")
-    public Result listMenuItem(HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        return ResultUtil.success(menuService.listMenuItem(pkCompany));
+    public Result listMenuItem() {
+
+        return ResultUtil.success(menuService.listMenuItem(RestaurantRequestContext.getPkCompany()));
     }
 
     @PostMapping("listMenu")
     public Result listMenu(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                            @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
-                           @RequestParam(required = false) String menuName,
-                           HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        List<Menu> menuList = menuService.listMenu(menuName, pkCompany);
+                           @RequestParam(required = false) String menuName) {
+
+        List<Menu> menuList = menuService.listMenu(menuName, RestaurantRequestContext.getPkCompany());
         WebPage webPage = new WebPage(pageNum, pageSize, menuList.size());
         return ResultUtil.successPage(menuList, webPage);
     }
 
     @PostMapping("/saveMenu")
-    public Result saveMenu(@RequestBody Menu menu, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result saveMenu(@RequestBody Menu menu) {
+
         try {
-            if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), pkCompany)) {
+            if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("菜谱已存在");
             }
             if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0) {
                 return ResultUtil.error("请选择菜品");
             }
-            menuService.saveMenu(menu.getMenuName(), menu.getPkRecipes(), pkCompany);
+            menuService.saveMenu(menu.getMenuName(), menu.getPkRecipes(), RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -71,19 +62,16 @@ public class MenuController {
     }
 
     @PostMapping("/updateMenu")
-    public Result updateMenu(@RequestBody Menu menu, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result updateMenu(@RequestBody Menu menu) {
+
         try {
-            if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), pkCompany)) {
+            if (menuService.checkMenuExist(menu.getPkMenu(), menu.getMenuName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("菜谱已存在");
             }
             if (menu.getPkRecipes() == null && menu.getPkRecipes().size() == 0) {
                 return ResultUtil.error("请选择菜品");
             }
-            menuService.updateMenu(menu.getPkMenu(), menu.getMenuName(), menu.getPkRecipes(), pkCompany);
+            menuService.updateMenu(menu.getPkMenu(), menu.getMenuName(), menu.getPkRecipes(), RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -92,13 +80,10 @@ public class MenuController {
     }
 
     @PostMapping("/queryRecipeCount")
-    public Result queryRecipeCount(@RequestParam String pkMenu, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result queryRecipeCount(@RequestParam String pkMenu) {
+
         try {
-            return ResultUtil.success(menuService.queryRecipeCount(pkMenu, pkCompany));
+            return ResultUtil.success(menuService.queryRecipeCount(pkMenu, RestaurantRequestContext.getPkCompany()));
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();

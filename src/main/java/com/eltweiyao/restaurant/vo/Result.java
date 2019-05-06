@@ -1,10 +1,7 @@
 package com.eltweiyao.restaurant.vo;
 
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.pagehelper.Page;
-
-import java.io.Serializable;
 
 /**
  * @author weiyao

@@ -32,7 +32,12 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> listRecipe(String recipeName, String materialName, String pkCompany) {
 
-        return Optional.ofNullable(recipeMapper.listRecipe(recipeName, materialName, pkCompany)).orElse(new ArrayList<>());
+        return Optional.ofNullable(recipeMapper.listRecipe(recipeName, materialName, null, pkCompany)).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<Recipe> listRecipe(String recipeName, String materialName, String pkStore, String pkCompany) {
+        return Optional.ofNullable(recipeMapper.listRecipe(recipeName, materialName, pkStore, pkCompany)).orElse(new ArrayList<>());
     }
 
     @Override

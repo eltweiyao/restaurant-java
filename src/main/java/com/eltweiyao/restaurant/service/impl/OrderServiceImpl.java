@@ -8,14 +8,13 @@ import com.eltweiyao.restaurant.dto.Material;
 import com.eltweiyao.restaurant.dto.Order;
 import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.service.OrderService;
-import org.apache.tomcat.jni.Local;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.rmi.MarshalledObject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -26,6 +25,8 @@ import java.util.*;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     private OrderMapper orderMapper;
@@ -91,15 +92,15 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case DateLevel.YESTARDAY:
                 startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 break;
             case DateLevel.RECENTWEEK:
                 startDate = startDate.minusDays(1).minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 break;
             case DateLevel.RECENTMONTH:
                 startDate = startDate.minusDays(1).minusMonths(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 break;
 
         }
@@ -116,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
             case DateLevel.TODAY:
                 startDate = startDate.withHour(0).withMinute(0).withSecond(0);
                 endDate = endDate.plusDays(1).withHour(0).withMinute(0).withSecond(0);
-                while (!startDate.isAfter(endDate)) {
+                while (startDate.isBefore(endDate)) {
                     Map<String, String> map = Optional.ofNullable(orderMapper.getTurnoverReport(startDate.format(formatter), startDate.plusHours(1).format(formatter), pkCompany)).orElse(new HashMap<>());
                     map.put("time", startDate.format(DateTimeFormatter.ofPattern("HH:mm")));
                     result.add(map);
@@ -126,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
             case DateLevel.YESTARDAY:
                 startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
                 endDate = endDate.withHour(0).withMinute(0).withSecond(0);
-                while (!startDate.isAfter(endDate)) {
+                while (startDate.isBefore(endDate)) {
                     Map<String, String> map = Optional.ofNullable(orderMapper.getTurnoverReport(startDate.format(formatter), startDate.plusHours(1).format(formatter), pkCompany)).orElse(new HashMap<>());
                     map.put("time", startDate.format(DateTimeFormatter.ofPattern("HH:mm")));
                     result.add(map);
@@ -134,8 +135,8 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
             case DateLevel.RECENTWEEK:
-                startDate = startDate.minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                startDate = startDate.minusDays(1).minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 while (startDate.isBefore(endDate)) {
                     Map<String, String> map = Optional.ofNullable(orderMapper.getTurnoverReport(startDate.format(formatter), startDate.plusDays(1).format(formatter), pkCompany)).orElse(new HashMap<>());
                     map.put("time", startDate.format(DateTimeFormatter.ofPattern("MM/dd")));
@@ -145,8 +146,8 @@ public class OrderServiceImpl implements OrderService {
                 }
                 break;
             case DateLevel.RECENTMONTH:
-                startDate = startDate.minusMonths(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                startDate = startDate.minusDays(1).minusMonths(1).withHour(0).withMinute(0).withSecond(0);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 while (startDate.isBefore(endDate)) {
                     Map<String, String> map = Optional.ofNullable(orderMapper.getTurnoverReport(startDate.format(formatter), startDate.plusDays(1).format(formatter), pkCompany)).orElse(new HashMap<>());
                     map.put("time", startDate.format(DateTimeFormatter.ofPattern("MM/dd")));
@@ -166,6 +167,7 @@ public class OrderServiceImpl implements OrderService {
         LocalDateTime endDate = LocalDateTime.now();
         int total;
         List<Map<String, String>> result = new ArrayList<>();
+        //根据时间段查询门店营业数据
         switch (level) {
             case DateLevel.TODAY:
                 startDate = startDate.withHour(0).withMinute(0).withSecond(0);
@@ -174,28 +176,30 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case DateLevel.YESTARDAY:
                 startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getDishFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getDishCount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;
             case DateLevel.RECENTWEEK:
-                startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                startDate = startDate.minusDays(1).minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getDishFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getDishCount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;
             case DateLevel.RECENTMONTH:
                 startDate = startDate.minusDays(1).minusMonths(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getDishFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getDishCount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;
             default:
                 total = 1;
         }
+        //如果没有查询到数据，返空
         if (total < 0 || CollectionUtils.isEmpty(result)) {
             return new ArrayList<>();
         }
+        //计算比例
         BigDecimal sum = new BigDecimal(0);
         for (Map<String, String> map : result) {
             Object count = map.get("number") != null ? map.get("number") : 0;
@@ -226,19 +230,19 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case DateLevel.YESTARDAY:
                 startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getStoreFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getStoreAmount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;
             case DateLevel.RECENTWEEK:
-                startDate = startDate.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                startDate = startDate.minusDays(1).minusWeeks(1).withHour(0).withMinute(0).withSecond(0);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getStoreFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getStoreAmount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;
             case DateLevel.RECENTMONTH:
                 startDate = startDate.minusDays(1).minusMonths(1).withHour(0).withMinute(0).withSecond(0);
-                endDate = endDate.minusDays(1).withHour(11).withMinute(59).withSecond(59);
+                endDate = endDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
                 result = Optional.ofNullable(orderMapper.getStoreFanReport(startDate.format(formatter), endDate.format(formatter), pkCompany)).orElse(new ArrayList<>());
                 total = orderMapper.getStoreAmount(startDate.format(formatter), endDate.format(formatter), pkCompany);
                 break;

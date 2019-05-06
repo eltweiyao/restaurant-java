@@ -32,6 +32,7 @@ public class AuthController {
         if (map != null && map.get("pkCompany") != null){
             session.setAttribute("pkCompany", map.get("pkCompany"));
             session.setAttribute("pkStore", map.get("pkStore"));
+            session.setAttribute("accountType", map.get("accountType"));
             return ResultUtil.success(map);
         }
         return ResultUtil.error("账户名密码错误");

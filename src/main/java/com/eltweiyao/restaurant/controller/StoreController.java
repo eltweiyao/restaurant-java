@@ -1,6 +1,7 @@
 package com.eltweiyao.restaurant.controller;
 
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.context.RestaurantRequestContext;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.eltweiyao.restaurant.dto.Menu;
 import com.eltweiyao.restaurant.dto.Store;
 import com.eltweiyao.restaurant.service.MenuService;
@@ -34,38 +35,28 @@ public class StoreController {
     public Result listStore(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                            @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
                            @RequestParam(required = false) String storeName,
-                           @RequestParam(required = false) String storePosition,
-                           HttpServletRequest request){
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        List<Store> storeList = storeService.listStore(storeName, storePosition, pkCompany);
+                           @RequestParam(required = false) String storePosition){
+
+        List<Store> storeList = storeService.listStore(storeName, storePosition, RestaurantRequestContext.getPkCompany());
         WebPage webPage = new WebPage(pageNum, pageSize, storeList.size());
         return ResultUtil.successPage(storeList, webPage);
     }
 
     @PostMapping("listMenu")
-    public Result listMenu(HttpServletRequest request){
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        List<Menu> menuList = menuService.listMenu(null, pkCompany);
+    public Result listMenu(){
+
+        List<Menu> menuList = menuService.listMenu(null, RestaurantRequestContext.getPkCompany());
         return ResultUtil.success(menuList);
     }
 
     @PostMapping("/saveStore")
-    public Result saveStore(@RequestBody Store store, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result saveStore(@RequestBody Store store) {
+
         try {
-            if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), pkCompany)) {
+            if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("门店已存在");
             }
-            store.setPkCompany(pkCompany);
+            store.setPkCompany(RestaurantRequestContext.getPkCompany());
             storeService.saveStore(store);
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);
@@ -75,16 +66,13 @@ public class StoreController {
     }
 
     @PostMapping("/updateStore")
-    public Result updateStore(@RequestBody Store store, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result updateStore(@RequestBody Store store) {
+
         try {
-            if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), pkCompany)) {
+            if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("门店已存在");
             }
-            store.setPkCompany(pkCompany);
+            store.setPkCompany(RestaurantRequestContext.getPkCompany());
             storeService.updateStore(store);
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);
@@ -94,13 +82,10 @@ public class StoreController {
     }
 
     @PostMapping("/deleteStore")
-    public Result deleteStore(@RequestParam String pkStore, HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result deleteStore(@RequestParam String pkStore) {
+
         try {
-            storeService.deleteStore(pkStore, pkCompany);
+            storeService.deleteStore(pkStore, RestaurantRequestContext.getPkCompany());
             return ResultUtil.success();
         } catch (Exception e) {
             logger.error("保存菜谱出错, errMsg = {}, stack info =", e.getMessage(), e);

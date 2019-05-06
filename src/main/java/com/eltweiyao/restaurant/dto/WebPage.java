@@ -1,4 +1,4 @@
-package com.eltweiyao.restaurant.constant;
+package com.eltweiyao.restaurant.dto;
 
 import com.eltweiyao.restaurant.util.CodeHelper;
 import sun.awt.geom.AreaOp;

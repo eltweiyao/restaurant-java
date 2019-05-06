@@ -1,4 +1,4 @@
-package com.eltweiyao.restaurant.constant;
+package com.eltweiyao.restaurant.enums;
 
 /**
  * @author weiyao

@@ -1,8 +1,8 @@
 package com.eltweiyao.restaurant.util;
 
-import com.eltweiyao.restaurant.constant.ResponseCode;
+import com.eltweiyao.restaurant.enums.ResponseCode;
 import com.eltweiyao.restaurant.vo.Result;
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**

@@ -89,6 +89,14 @@
         <if test="materialName != '' and materialName != null">
             <![CDATA[ AND instr(material_name, #{materialName}) >0 ]]>
         </if>
+         <if test="pkStore != '' and pkStore != null">
+             AND pk_recipe in (
+                select pk_recipe
+                from menu_related_dish
+                where pk_company = #{pkCompany} and pk_menu = (select pk_menu from restaurant_store where pk_store = #{pkStore})
+             )
+         </if>
+
     </select>
     <select id="checkRecipeExist" resultType="java.lang.Integer">
         select count(*)

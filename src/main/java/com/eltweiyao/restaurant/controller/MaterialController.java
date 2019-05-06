@@ -1,7 +1,8 @@
 package com.eltweiyao.restaurant.controller;
 
+import com.eltweiyao.restaurant.context.RestaurantRequestContext;
 import com.eltweiyao.restaurant.vo.Result;
-import com.eltweiyao.restaurant.constant.WebPage;
+import com.eltweiyao.restaurant.dto.WebPage;
 import com.eltweiyao.restaurant.dto.Material;
 import com.eltweiyao.restaurant.service.MaterialService;
 import com.eltweiyao.restaurant.util.ResultUtil;
@@ -28,18 +29,13 @@ public class MaterialController {
     private MaterialService materialService;
 
     @PostMapping("/saveMaterialUnit")
-    public Result saveMaterialUnit(@RequestParam String unitName,
-                                   HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result saveMaterialUnit(@RequestParam String unitName) {
 
-        if (materialService.checkMaterialUnitExist(null, unitName, pkCompany)) {
+        if (materialService.checkMaterialUnitExist(null, unitName, RestaurantRequestContext.getPkCompany())) {
             return ResultUtil.error("单位名称已存在");
         }
         try {
-            materialService.saveMaterialUnit(unitName, pkCompany);
+            materialService.saveMaterialUnit(unitName, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("保存原料单位出错, errMsg = {} , stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -48,17 +44,13 @@ public class MaterialController {
     }
 
     @PostMapping("/updateMaterialUnit")
-    public Result updateMaterialUnit(@RequestParam String pkUnit, @RequestParam String unitName,
-                                     HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        if (materialService.checkMaterialUnitExist(pkUnit, unitName, pkCompany)) {
+    public Result updateMaterialUnit(@RequestParam String pkUnit, @RequestParam String unitName) {
+
+        if (materialService.checkMaterialUnitExist(pkUnit, unitName, RestaurantRequestContext.getPkCompany())) {
             return ResultUtil.error("单位名称已存在");
         }
         try {
-            materialService.updateMaterialUnit(pkUnit, unitName, pkCompany);
+            materialService.updateMaterialUnit(pkUnit, unitName, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("修改原料单位出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -69,14 +61,10 @@ public class MaterialController {
     @PostMapping("/listMaterialUnit")
     public Result listMaterialUnit(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                                    @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
-                                   @RequestParam(required = false) String unitName,
-                                   HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+                                   @RequestParam(required = false) String unitName) {
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Material> materials = materialService.listMaterialUnit(unitName, pkCompany);
+        List<Material> materials = materialService.listMaterialUnit(unitName, RestaurantRequestContext.getPkCompany());
         PageInfo pageInfo = new PageInfo(materials);
         WebPage webPage = new WebPage(pageNum, pageSize, (int) pageInfo.getTotal());
         return ResultUtil.successPage(materials, webPage);
@@ -88,53 +76,37 @@ public class MaterialController {
      * @return
      */
     @PostMapping("/listMaterialUnitAll")
-    public Result listMaterialUnit(
-            HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        return ResultUtil.success(materialService.listMaterialUnit(null, pkCompany));
+    public Result listMaterialUnit() {
+
+        return ResultUtil.success(materialService.listMaterialUnit(null, RestaurantRequestContext.getPkCompany()));
     }
 
     @PostMapping("/listMaterial")
     public Result listMaterial(@RequestParam(value = "pageno", defaultValue = "1") Integer pageNum,
                                @RequestParam(value = "rowcount", defaultValue = "10") Integer pageSize,
-                               @RequestParam(required = false) String materialName,
-                               HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+                               @RequestParam(required = false) String materialName) {
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Material> materials = materialService.listMaterial(materialName, pkCompany);
+        List<Material> materials = materialService.listMaterial(materialName, RestaurantRequestContext.getPkCompany());
         PageInfo pageInfo = new PageInfo(materials);
         WebPage webPage = new WebPage(pageNum, pageSize, (int) pageInfo.getTotal());
         return ResultUtil.successPage(materials, webPage);
     }
 
     @PostMapping("/listMaterialAll")
-    public Result listMaterialAll(
-            HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        return ResultUtil.success(materialService.listMaterial(null, pkCompany));
+    public Result listMaterialAll() {
+
+        return ResultUtil.success(materialService.listMaterial(null, RestaurantRequestContext.getPkCompany()));
     }
 
     @PostMapping("/saveMaterial")
-    public Result saveMaterial(@RequestBody Material material,
-                               HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
-        if (materialService.checkMaterialExist(material.getPkMaterial(), material.getMaterialName(), pkCompany)) {
+    public Result saveMaterial(@RequestBody Material material) {
+
+        if (materialService.checkMaterialExist(material.getPkMaterial(), material.getMaterialName(), RestaurantRequestContext.getPkCompany())) {
             return ResultUtil.error("单位名称已存在");
         }
         try {
-            materialService.saveMaterial(material, pkCompany);
+            materialService.saveMaterial(material, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("保存原料出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
@@ -143,14 +115,10 @@ public class MaterialController {
     }
 
     @PostMapping("/updateMaterial")
-    public Result updateMaterial(@RequestBody Material material,
-                                 HttpServletRequest request) {
-        String pkCompany = String.valueOf(request.getSession().getAttribute("pkCompany"));
-        if (pkCompany == null || pkCompany.equals("") || pkCompany.equals("null")) {
-            return ResultUtil.error("未获取到当前登录人权限信息");
-        }
+    public Result updateMaterial(@RequestBody Material material) {
+
         try {
-            materialService.updateMaterial(material, pkCompany);
+            materialService.updateMaterial(material, RestaurantRequestContext.getPkCompany());
         } catch (Exception e) {
             logger.error("修改原料出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
