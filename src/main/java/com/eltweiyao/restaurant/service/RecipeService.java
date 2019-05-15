@@ -53,7 +53,7 @@ public interface RecipeService {
      * @param pkRecipe
      * @param recipeName
      */
-    void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl);
+    void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl, String remark);
 
     /**
      * 修改物料信息

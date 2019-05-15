@@ -26,16 +26,17 @@ public enum AccountType {
     static Map<Integer, AccountType> map = new HashMap<>();
 
     static {
-        for (AccountType e:AccountType.values()){
+        for (AccountType e : AccountType.values()) {
             map.put(e.getCode(), e);
         }
     }
 
-    public static boolean isAdmin(Integer i){
-        if (map.get(i) == ADMIN){
+    public static boolean isAdmin(Integer i) {
+        if (map.get(i) == ADMIN) {
             return true;
         }
         return false;
     }
+
 
 }

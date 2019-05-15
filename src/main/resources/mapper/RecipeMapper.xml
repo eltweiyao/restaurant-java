@@ -9,6 +9,7 @@
         <result column="pk_category" property="pkCategory"/>
         <result column="category_name" property="categoryName"/>
         <result column="image_url" property="imageUrl"/>
+        <result column="remark" property="remark" />
         <collection property="materials" ofType="com.eltweiyao.restaurant.dto.Material">
             <id column="pk_material" property="pkMaterial"/>
             <result column="material_name" property="materialName"/>
@@ -29,12 +30,12 @@
         </if>
     </insert>
     <insert id="saveRecipeInfo">
-        insert into recipe_programme(pk_recipe, pk_category, recipe_name, recipe_price, is_shelf, image_url, pk_company)
-        values (#{recipe.pkRecipe}, #{recipe.pkCategory}, #{recipe.recipeName}, #{recipe.recipePrice}, '1', #{recipe.imageUrl}, #{pkCompany})
+        insert into recipe_programme(pk_recipe, pk_category, recipe_name, recipe_price, is_shelf, image_url, remark, pk_company)
+        values (#{recipe.pkRecipe}, #{recipe.pkCategory}, #{recipe.recipeName}, #{recipe.recipePrice}, '1', #{recipe.imageUrl}, #{recipe.remark}, #{pkCompany})
     </insert>
     <update id="updateRecipeInfo">
         update recipe_programme
-        set recipe_name = #{recipeName}, recipe_price = #{recipePrice}, pk_category = #{pkCategory}, image_url = #{imageUrl}
+        set recipe_name = #{recipeName}, recipe_price = #{recipePrice}, pk_category = #{pkCategory}, image_url = #{imageUrl}, remark = #{remark}
         where pk_recipe = #{pkRecipe} and pk_company = #{pkCompany}
     </update>
     <update id="updateRecipeMaterial">
@@ -71,7 +72,8 @@
         mu.unit_name,
         rc.pk_category,
         rc.category_name,
-        rp.image_url
+        rp.image_url,
+        rp.remark
         FROM
         recipe_programme rp
         INNER JOIN recipe_category rc ON rp.pk_category = rc.pk_category

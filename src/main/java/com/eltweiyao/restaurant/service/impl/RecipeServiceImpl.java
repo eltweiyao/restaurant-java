@@ -66,8 +66,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl) {
-        recipeMapper.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, pkCompany, imageUrl);
+    public void updateRecipeInfo(String pkRecipe, String pkCategory, String recipeName, double recipePrice, String pkCompany, String imageUrl, String remark) {
+        recipeMapper.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, pkCompany, imageUrl, remark);
     }
 
     @Override

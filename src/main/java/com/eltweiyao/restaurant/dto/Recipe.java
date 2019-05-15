@@ -18,6 +18,7 @@ public class Recipe {
     private String pkCategory;
     private String categoryName;
     private String imageUrl;
+    private String remark;
     private List<Material> materials;
 
 }

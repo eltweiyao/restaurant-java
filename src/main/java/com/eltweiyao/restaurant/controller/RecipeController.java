@@ -117,11 +117,12 @@ public class RecipeController {
                                    @RequestParam("recipeName") String recipeName,
                                    @RequestParam("pkCategory") String pkCategory,
                                    @RequestParam("recipePrice") double recipePrice,
-                                   @RequestParam(value = "imageUrl", required = false) String imageUrl) {
+                                   @RequestParam(value = "imageUrl", required = false) String imageUrl,
+                                   @RequestParam(value = "remark", required = false) String remark) {
 
         try {
-            recipeService.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, RestaurantRequestContext.getPkCompany(), imageUrl);
-        } catch (Exception e) {
+            recipeService.updateRecipeInfo(pkRecipe, pkCategory, recipeName, recipePrice, RestaurantRequestContext.getPkCompany(), imageUrl, remark);
+            } catch (Exception e) {
             logger.error("保存原料出错, errMsg = {}, stack info =", e.getMessage(), e);
             return ResultUtil.error();
         }

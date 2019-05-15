@@ -59,7 +59,7 @@ public interface RecipeMapper {
      * @param recipeName
      */
     void updateRecipeInfo(@Param("pkRecipe") String pkRecipe, @Param("pkCategory") String pkCategory, @Param("recipeName") String recipeName,
-                          @Param("recipePrice") double recipePrice, @Param("pkCompany") String pkCompany, @Param("imageUrl") String imageUrl);
+                          @Param("recipePrice") double recipePrice, @Param("pkCompany") String pkCompany, @Param("imageUrl") String imageUrl, @Param("remark") String remark);
 
     /**
      * 修改物料
