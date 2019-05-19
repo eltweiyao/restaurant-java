@@ -26,7 +26,7 @@
       WHERE account = #{account} AND password = #{password}
     </select>
 
-    <select id="checkoutAccountExist">
+    <select id="checkoutAccountExist" resultType="java.lang.Integer">
         select count(0)
         from restaurant_account
         where account = #{account} and pk_company = #{pkCompany}
