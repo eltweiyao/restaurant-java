@@ -4,6 +4,7 @@ import com.eltweiyao.restaurant.dto.Menu;
 import com.eltweiyao.restaurant.dto.Recipe;
 import com.eltweiyao.restaurant.dto.Store;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @author weiyao
  * @date 2019/3/25.
  */
+@Repository
 public interface StoreMapper {
 
 

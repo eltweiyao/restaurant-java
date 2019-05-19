@@ -3,6 +3,7 @@ package com.eltweiyao.restaurant.dao;
 import com.eltweiyao.restaurant.dto.Material;
 import com.eltweiyao.restaurant.dto.Recipe;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @author weiyao
  * @date 2019/3/20.
  */
+@Repository
 public interface RecipeMapper {
 
     /**

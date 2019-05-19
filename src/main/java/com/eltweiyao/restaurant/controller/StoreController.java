@@ -56,6 +56,9 @@ public class StoreController {
             if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("门店已存在");
             }
+            if (storeService.checkoutAccountExist(store.getPkStore(), store.getAccount(), RestaurantRequestContext.getPkCompany())){
+                return ResultUtil.error("账户已存在");
+            }
             store.setPkCompany(RestaurantRequestContext.getPkCompany());
             storeService.saveStore(store);
         } catch (Exception e) {
@@ -71,6 +74,9 @@ public class StoreController {
         try {
             if (storeService.checkStoreExist(store.getPkStore(), store.getStoreName(), RestaurantRequestContext.getPkCompany())) {
                 return ResultUtil.error("门店已存在");
+            }
+            if (storeService.checkoutAccountExist(store.getPkStore(), store.getAccount(), RestaurantRequestContext.getPkCompany())){
+                return ResultUtil.error("账户已存在");
             }
             store.setPkCompany(RestaurantRequestContext.getPkCompany());
             storeService.updateStore(store);

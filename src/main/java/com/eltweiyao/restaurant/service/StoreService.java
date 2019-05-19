@@ -15,6 +15,7 @@ public interface StoreService {
 
     /**
      * 查询门店
+     *
      * @param pkCompany
      * @return
      */
@@ -22,6 +23,7 @@ public interface StoreService {
 
     /**
      * 查看菜谱是否存在
+     *
      * @param pkStore
      * @param storeName
      * @return
@@ -29,13 +31,25 @@ public interface StoreService {
     boolean checkStoreExist(String pkStore, String storeName, String pkCompany);
 
     /**
+     * 校验登录账号是否存在
+     *
+     * @param pkStore
+     * @param account
+     * @param pkCompany
+     * @return
+     */
+    boolean checkoutAccountExist(String pkStore, String account, String pkCompany);
+
+    /**
      * 保存菜谱
+     *
      * @param store
      */
     void saveStore(Store store) throws Exception;
 
     /**
      * 修改菜谱
+     *
      * @param store
      */
     void updateStore(Store store) throws Exception;

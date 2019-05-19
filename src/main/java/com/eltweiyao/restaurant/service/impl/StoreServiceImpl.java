@@ -32,14 +32,22 @@ public class StoreServiceImpl implements StoreService {
 
 
     @Override
-    public List<Store> listStore(String storeName, String storePoisition,  String pkCompany) {
+    public List<Store> listStore(String storeName, String storePoisition, String pkCompany) {
         List<Store> storeList = Optional.ofNullable(storeMapper.listStore(storeName, storePoisition, pkCompany)).orElse(new ArrayList<>());
         return storeList;
     }
 
     @Override
     public boolean checkStoreExist(String pkStore, String storeName, String pkCompany) {
-        if (storeMapper.checkStoreExist(pkStore, storeName, pkCompany) >0){
+        if (storeMapper.checkStoreExist(pkStore, storeName, pkCompany) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkoutAccountExist(String pkStore, String account, String pkCompany) {
+        if (authMapper.checkoutAccountExist(account, pkStore, pkCompany) > 0) {
             return true;
         }
         return false;
@@ -50,6 +58,7 @@ public class StoreServiceImpl implements StoreService {
     public void saveStore(Store store) throws Exception {
         String pkStore = CodeHelper.createUUID();
         store.setPkStore(pkStore);
+//        store.setPassword(CodeHelper.getMD5Value(store.getPassword()));
         storeMapper.saveStore(store);
         authMapper.saveStoreAccount(store);
     }
@@ -58,6 +67,7 @@ public class StoreServiceImpl implements StoreService {
     @Transactional(rollbackFor = Exception.class)
     public void updateStore(Store store) throws Exception {
         storeMapper.updateStore(store);
+//        store.setPassword(CodeHelper.getMD5Value(store.getPassword()));
         authMapper.updateStoreAccount(store);
     }
 

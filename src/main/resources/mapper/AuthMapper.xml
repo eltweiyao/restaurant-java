@@ -25,6 +25,16 @@
 	  LEFT JOIN restaurant_store store ON account.pk_store = store.pk_store
       WHERE account = #{account} AND password = #{password}
     </select>
+
+    <select id="checkoutAccountExist">
+        select count(0)
+        from restaurant_account
+        where account = #{account} and pk_company = #{pkCompany}
+        <if test="pkStore != null and pkStore != ''">
+            and pk_store != #{pkStore}
+        </if>
+    </select>
+
     <select id="queryMenu" resultType="java.lang.String">
         select menu_json
         from restaurant_menu

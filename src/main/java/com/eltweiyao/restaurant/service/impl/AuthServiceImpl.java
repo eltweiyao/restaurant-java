@@ -2,6 +2,7 @@ package com.eltweiyao.restaurant.service.impl;
 
 import com.eltweiyao.restaurant.dao.AuthMapper;
 import com.eltweiyao.restaurant.service.AuthService;
+import com.eltweiyao.restaurant.util.CodeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

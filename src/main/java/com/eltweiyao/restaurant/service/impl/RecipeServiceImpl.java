@@ -26,7 +26,16 @@ public class RecipeServiceImpl implements RecipeService {
     public void saveRecipe(Recipe recipe, String pkCompany) throws Exception {
         recipe.setPkRecipe(CodeHelper.createUUID());
         recipeMapper.saveRecipeInfo(recipe, pkCompany);
-        recipeMapper.saveRecipeMaterials(recipe.getPkRecipe(), recipe.getMaterials(), pkCompany);
+        Map<String, Material> map = new HashMap<>();
+        for (Material material : recipe.getMaterials()) {
+            Material m = map.get(material.getPkMaterial());
+            if (m == null) {
+                map.put(material.getPkMaterial(), material);
+            } else {
+                m.setMaterialCount(material.getMaterialCount() + m.getMaterialCount());
+            }
+        }
+        recipeMapper.saveRecipeMaterials(recipe.getPkRecipe(), new ArrayList<>(map.values()), pkCompany);
     }
 
     @Override
