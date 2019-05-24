@@ -5,12 +5,36 @@
         insert into restaurant_account(account, password, pk_company, pk_store, account_type, company_name)
         select #{account}, #{password}, #{pkCompany}, #{pkStore}, "2", company_name from restaurant_account where pk_company = #{pkCompany} limit 1
     </insert>
+    <insert id="register">
+        insert into restaurant_account(account, password, pk_company, pk_store, account_type, company_name)
+        values(#{account}, #{password}, #{pkCompany}, null, "3", #{companyName})
+    </insert>
+    <delete id="reject">
+        delete from restaurant_account where pk_company = #{pkCompany}
+    </delete>
+    <select id="checkoutAccountExist" resultType="java.lang.Integer">
+        select count(0)
+        from restaurant_account
+        where account = #{account}
+        <if test="pkCompany != null and pkCompant != ''">
+            and pk_company = #{pkCompany}
+        </if>
+        <if test="pkStore != null and pkStore != ''">
+            and pk_store != #{pkStore}
+        </if>
+    </select>
+
+
     <update id="updateStoreAccount">
         update restaurant_account
         set account = #{account}, password = #{password}
         where pk_company = #{pkCompany} and pk_store = #{pkStore}
     </update>
-
+    <update id="agree">
+        update restaurant_account
+        set account_type = 1
+        where pk_company = #{pkCompany}
+    </update>
 
     <select id="login" resultType="java.util.Map">
         SELECT
@@ -26,18 +50,15 @@
       WHERE account = #{account} AND password = #{password}
     </select>
 
-    <select id="checkoutAccountExist" resultType="java.lang.Integer">
-        select count(0)
-        from restaurant_account
-        where account = #{account} and pk_company = #{pkCompany}
-        <if test="pkStore != null and pkStore != ''">
-            and pk_store != #{pkStore}
-        </if>
-    </select>
-
     <select id="queryMenu" resultType="java.lang.String">
         select menu_json
         from restaurant_menu
         where account_type = #{accountType}
     </select>
+    <select id="listAccount" resultType="com.eltweiyao.restaurant.dto.Account">
+        select pk_company pkCompany, account_type accountType, company_name companyName, account from restaurant_account
+        where account_type not in (2, 4)
+    </select>
+
+
 </mapper>

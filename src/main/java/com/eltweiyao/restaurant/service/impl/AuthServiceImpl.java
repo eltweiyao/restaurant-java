@@ -25,5 +25,10 @@ public class AuthServiceImpl implements AuthService {
         return Optional.ofNullable(authMapper.login(account, password)).orElse(new HashMap<>());
     }
 
+    @Override
+    public void register(String account, String password, String companyName, String pkCompany) {
+        authMapper.register(account, password, companyName, pkCompany);
+    }
+
 
 }

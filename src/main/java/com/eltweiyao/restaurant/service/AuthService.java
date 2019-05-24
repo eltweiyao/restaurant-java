@@ -19,4 +19,6 @@ public interface AuthService {
     Map<String, String> login(String account, String password);
 
 
+    void register(String account, String password, String companyName, String pkCompany);
+
 }

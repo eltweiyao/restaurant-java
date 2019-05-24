@@ -14,4 +14,8 @@ public class Account {
     private Integer accountType;
 
     private String pkStore;
+
+    private String account;
+
+    private String companyName;
 }
