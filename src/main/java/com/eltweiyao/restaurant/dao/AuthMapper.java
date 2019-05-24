@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository
 public interface AuthMapper {
 
-    Map<String, String> login(@Param("account") String account, @Param("password") String password);
+    Map<String, String> login(@Param("account") String account, @Param("password") String password, @Param("md5Pwd")String md5Pwd);
 
     int checkoutAccountExist(@Param("account") String account, @Param("pkStore") String pkStore,
                              @Param("pkCompany") String pkCompany);

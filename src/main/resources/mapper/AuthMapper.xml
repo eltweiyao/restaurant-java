@@ -47,7 +47,7 @@
       FROM
 	      restaurant_account account
 	  LEFT JOIN restaurant_store store ON account.pk_store = store.pk_store
-      WHERE account = #{account} AND password = #{password}
+      WHERE account = #{account} AND ((account_type != 2 and password = #{md5Pwd}) or ((account_type = 2) and password = #{password}))
     </select>
 
     <select id="queryMenu" resultType="java.lang.String">

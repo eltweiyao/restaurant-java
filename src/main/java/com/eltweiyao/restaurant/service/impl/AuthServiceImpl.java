@@ -22,13 +22,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Map<String, String> login(String account, String password) {
-        return Optional.ofNullable(authMapper.login(account, password)).orElse(new HashMap<>());
+        String md5pwd = CodeHelper.getMD5Value(account + password);
+        return Optional.ofNullable(authMapper.login(account, password, md5pwd)).orElse(new HashMap<>());
     }
 
     @Override
     public void register(String account, String password, String companyName, String pkCompany) {
-        authMapper.register(account, password, companyName, pkCompany);
+        String md5Pwd = CodeHelper.getMD5Value(account + password);
+        authMapper.register(account, md5Pwd, companyName, pkCompany);
     }
-
 
 }
